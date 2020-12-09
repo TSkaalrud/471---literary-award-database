@@ -366,7 +366,7 @@ class DonorDetails (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting a Donor
-     def delete(self, request, Name, format=None):
+    def delete(self, request, Name, format=None):
         donor = Donor.objects.filter (Name = Name)
         donor.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -471,7 +471,7 @@ class VendorDetails (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting a Vendor
-     def delete(self, request, Name, format=None):
+    def delete(self, request, Name, format=None):
         vendor = Vendor.objects.filter (Name = Name)
         vendor.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -512,7 +512,7 @@ class SellDetails (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting a Sale
-     def delete(self, request, W_Name, V_Name, format=None):
+    def delete(self, request, W_Name, V_Name, format=None):
         sell = Sell.objects.filter (W_Name = W_Name, V_Name = V_Name)
         sell.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
