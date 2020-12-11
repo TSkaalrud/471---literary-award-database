@@ -1,4 +1,8 @@
 from django.db import models
+from datetime import date
+from django import forms
+#from django_mysql.models import ListCharField
+
 #from django.contrib.auth.models import User
 
 
@@ -13,6 +17,10 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+#new addition to hold the list of Author PublishedWorks
+class PubWork(models.Model):
+    WorkName = models.CharField(max_length=100)
+    
 class Author(models.Model):
     Emerging_Established = (
         ('M', 'Emerging'),
@@ -28,14 +36,14 @@ class Author(models.Model):
     PublishedWorks = models.ManyToManyField(PubWork)
     Citizenship = models.CharField(max_length=100)
 
-#new addition to hold the list of Author PublishedWorks
-class PubWork(models.Model):
-    WorkName = models.CharField(max_length=100)
+class Publisher(models.Model):
+    PublisherName = models.CharField(max_length=100, primary_key=True)
+    location = models.CharField(max_length=100)
 
 #Added Name field because published works have names
 class Work(models.Model):
-    AuthorName = models.ForeignKey(Author, on_delete=CASCADE)
-    PublisherName = models.ForeignKey(Publisher, on_delete=CASCADE)
+    AuthorName = models.ForeignKey(Author, on_delete=models.CASCADE)
+    PublisherName = models.ForeignKey(Publisher, on_delete=models.CASCADE)
     WorkName = models.CharField(max_length=100)
     PageCount = models.IntegerField()
     Genre = models.CharField(max_length=100)
@@ -45,7 +53,7 @@ class Work(models.Model):
     PublishingRoute = models.CharField(max_length=100)
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields= ['AuthorName', 'PublisherName', 'WorkName'])
+            models.UniqueConstraint(fields= ['AuthorName', 'PublisherName', 'WorkName'], name='Work_key')
         ]
 
 #class Nominator(models.Model): unnecessary?
@@ -59,17 +67,23 @@ class Publication(models.Model):
     PublishingFormat = models.CharField(max_length=100)
     PrintRunSize = models.IntegerField()
     PublicationDate = forms.DateField(
-        widget=forms.DateInput(format=('%d-%m-%Y'))
+        widget=forms.DateInput(format=('%d-%m-%Y')))
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields= ['PublisherName', 'AuthorName'])
+            models.UniqueConstraint(fields= ['PublisherName', 'AuthorName'], name='Pub_key')
         ]
         
-class Publisher(models.Model):
-    PublisherName = models.CharField(max_length=100, primary_key=True)
-    location = models.CharField(max_length=100)
+
 
 #class Nominatable(models.Model): unnecessary?
+
+class Donor(models.Model):
+    Public = (
+        ('T', 'True'),
+        ('F', 'False'),
+    )
+    Name = models.CharField(max_length=100, primary_key=True)
+    PublicName = models.CharField(max_length=1, choices=Public)
 
 #uses ThirdParty pk for Nominator
 class LiteraryAward(models.Model):
@@ -83,28 +97,25 @@ class LiteraryAward(models.Model):
     MonetaryValue = models.IntegerField()
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields= ['NominatorName', 'DonorName'])
+            models.UniqueConstraint(fields= ['NominatorName', 'DonorName'], name='Lit_key')
         ]
 
-class Donor(models.Model):
-    Public = (
-        ('T', 'True'),
-        ('F', 'False'),
-    )
-    Name = models.CharField(max_length=100, primary_key=True)
-    PublicName = models.CharField(max_length=1, choices=Public)
+
 
 #class Criteria(models.Model): unnecessary?
+
+#new addition to hold a MutuallyExclusiveList
+class MEList(models.Model):
+    #List = ListCharField(
+    #    base_field=CharField(max_length=50),
+    #    size=10
+    #)
+    List = models.JSONField()
 
 class AwardBased(models.Model):
     MutuallyExclusiveList = models.ForeignKey(MEList, on_delete=models.CASCADE)
 
-#new addition to hold a MutuallyExclusiveList
-class MEList(models.Model):
-    List = ListCharField(
-        base_field=CharField(max_length=50)
-        size=10
-    )
+
     
 class WorkBased(models.Model):
     Form = models.CharField(max_length=100)
@@ -115,7 +126,7 @@ class WorkBased(models.Model):
     PageCount = models.IntegerField()
     RequiredSales = models.IntegerField()
     PublicationDate = forms.DateField(
-        widget=forms.DateInput(format=('%d-%m-%Y'))
+        widget=forms.DateInput(format=('%d-%m-%Y')))
     PublicationLocation = models.CharField(max_length=100)
     PrintRunSize = models.IntegerField()
     PublishingRoute = models.CharField(max_length=100)
@@ -146,5 +157,5 @@ class Sell(models.Model):
     
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields= ['W_Name', 'V_Name'])
+            models.UniqueConstraint(fields= ['W_Name', 'V_Name'], name='Sell_key')
         ]

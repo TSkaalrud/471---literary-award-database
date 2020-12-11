@@ -13,6 +13,7 @@ urlpatterns = [
     path('thirdParties/', views.ThirdPartyList.as_view()),
     path('thirdParties/<int:pk>', views.ThirdPartyDetail.as_view()),
     path('pubs/', views.PublicationList.as_view()),
+
     path('pubs/<slug:PublisherName>/<int:AuthorName>', views.PublicationDetail.as_view()),    
     path('publishers/', views.PublisherList.as_view()),
     path('publishers/<int:pk>', views.PublisherDetails.as_view()),
@@ -32,5 +33,6 @@ urlpatterns = [
     path('vendors/<int:pk>', views.VendorDetails.as_view()),
     path('sales/', views.SellList.as_view()),
     path('sales/<slug:W_Name>/<int:V_Name>', views.SellDetails.as_view()),
+
     
 ]
