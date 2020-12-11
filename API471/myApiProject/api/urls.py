@@ -1,4 +1,5 @@
 from django.urls import path,include
+from django.db import models
 from . import views
 urlpatterns = [
     path('users/', views.UserList.as_view()),
@@ -8,7 +9,7 @@ urlpatterns = [
     path('pubWorks/', views.PubWorkList.as_view()),
 
     path('works/', views.WorkList.as_view()),
-    path('works/<int:pk>', views.WorkDetail.as_view()),
+    path('works/<int:AuthorName>/<slug:PublisherName>/<slug:WorkName>', views.WorkDetail.as_view()),
     path('thirdParties/', views.ThirdPartyList.as_view()),
     path('thirdParties/<int:pk>', views.ThirdPartyDetail.as_view()),
     path('pubs/', views.PublicationList.as_view()),

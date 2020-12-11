@@ -87,8 +87,8 @@ class AuthorList (APIView):
     
 class AuthorDetail(APIView):
     #Searching Author Based on Author Name
-    def get(self, request, AuthorName, format=None):
-        author = Author.objects.get (AuthorName=AuthorName)
+    def get(self, request, pk, format=None):
+        author = Author.objects.get (pk=pk)
         serializer = AuthorSerializer(author)
         return Response (serializer.data)
 
@@ -144,8 +144,8 @@ class WorkList (APIView):
 
 class WorkDetail (APIView):
     #Searching for Work
-    def get(self, request, WorkName, format=None):
-        work = Work.objects.get (WorkName=WorkName)
+    def get(self, request, AuthorName, PublisherName, WorkName , format=None):
+        work = Work.objects.get (AuthorName=AuthorName, PublisherName=PublisherName, WorkName=WorkName)
         serializer = WorkSerializer(work)
         return Response (serializer.data)
     
