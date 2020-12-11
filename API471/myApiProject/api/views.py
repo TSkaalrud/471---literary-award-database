@@ -87,14 +87,14 @@ class AuthorList (APIView):
     
 class AuthorDetail(APIView):
     #Searching Author Based on Author Name
-    def get(self, request, AuthorName, format=None):
-        author = Author.objects.get (AuthorName=AuthorName)
+    def get(self, request, pk, format=None):
+        author = Author.objects.get (pk=pk)
         serializer = AuthorSerializer(author)
         return Response (serializer.data)
 
     #Updating information of existing author
-    def put(self, request, AuthorName, format=None):
-        author = Author.objects.filter(AuthorName=AuthorName).first()
+    def put(self, request, pk, format=None):
+        author = Author.objects.filter(pk=pk).first()
         serializer = AuthorSerializer(author, data=request.data)
         print(author)
         if serializer.is_valid ( ):
@@ -104,8 +104,8 @@ class AuthorDetail(APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     #Deleting an Author
-    def delete(self, request, AuthorName, format=None):
-        author = Author.objects.filter (AuthorName=AuthorName)
+    def delete(self, request, pk, format=None):
+        author = Author.objects.filter (pk=pk)
         author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -144,14 +144,14 @@ class WorkList (APIView):
 
 class WorkDetail (APIView):
     #Searching for Work
-    def get(self, request, WorkName, format=None):
-        work = Work.objects.get (WorkName=WorkName)
+    def get(self, request, AuthorName, PublisherName, WorkName , format=None):
+        work = Work.objects.get (AuthorName=AuthorName, PublisherName=PublisherName, WorkName=WorkName)
         serializer = WorkSerializer(work)
         return Response (serializer.data)
     
     #Updating work
-    def put(self, request, WorkName, format=None):
-        work = Work.objects.filter(WorkName=WorkName).first()
+    def put(self, request, AuthorName, PublisherName, WorkName, format=None):
+        work = Work.objects.filter(AuthorName = AuthorName, PublisherName = PublisherName, WorkName=WorkName).first()
         serializer = WorkSerializer(work, data=request.data)
         print(work)
         if serializer.is_valid ( ):
@@ -161,8 +161,8 @@ class WorkDetail (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting Work
-    def delete(self, request, WorkName, format=None):
-        work = Work.objects.filter (WorkName=WorkName)
+    def delete(self, request, AuthorName, PublisherName, WorkName, format=None):
+        work = Work.objects.filter (AuthorName = AuthorName, PublisherName = PublisherName, WorkName=WorkName)
         work.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -185,14 +185,14 @@ class ThirdPartyList (APIView):
 
 class ThirdPartyDetail (APIView):
     #Searching for Party
-    def get(self, request, PartyName, format=None):
-        party = ThirdParty.objects.get (PartyName=PartyName)
+    def get(self, request, pk, format=None):
+        party = ThirdParty.objects.get (pk=pk)
         serializer = ThirdPartySerializer(party)
         return Response (serializer.data)
 
     #Updating Third Party information
-    def put(self, request, PartyName, format=None):
-        party = ThirdParty.objects.filter(PartyName=PartyName).first()
+    def put(self, request, pk, format=None):
+        party = ThirdParty.objects.filter(pk=pk).first()
         serializer = ThirdPartySerializer(party, data=request.data)
         print(party)
         if serializer.is_valid ( ):
@@ -202,8 +202,8 @@ class ThirdPartyDetail (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting a Third Party
-    def delete(self, request, PartyName, format=None):
-        party = ThirdParty.objects.filter (PartyName=PartyName)
+    def delete(self, request, pk, format=None):
+        party = ThirdParty.objects.filter (pk=pk)
         party.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -227,13 +227,13 @@ class PublicationList (APIView):
 class PublicationDetail (APIView):
     #Searching for Publication
     def get(self, request, PublisherName, AuthorName, format=None):
-        publication = Publication.objects.get (PublisherName=PublisherName,AuthorName=AuthorName)
+        publication = Publication.objects.get (PublisherName=PublisherName, AuthorName=AuthorName)
         serializer = PublicationSerializer(publication)
         return Response (serializer.data)
 
     #Update existing Publication
     def put(self, request, PublisherName, AuthorName, format=None):
-        publication = Publication.objects.filter(PublicationName=PublicationName, AuthorName=AuthorName).first()
+        publication = Publication.objects.filter(PublicationName=PublisherName, AuthorName=AuthorName).first()
         serializer = PublicationSerializer(publication, data=request.data)
         print(publication)
         if serializer.is_valid ( ):
@@ -267,14 +267,14 @@ class PublisherList (APIView):
 
 class PublisherDetails (APIView):
     #Searching for Publisher
-    def get(self, request, PublisherName, format=None):
-        publisher = Publisher.objects.get (PublisherName=PublisherName)
+    def get(self, request, pk, format=None):
+        publisher = Publisher.objects.get (pk=pk)
         serializer = PublisherSerializer(publisher)
         return Response (serializer.data)
 
     #Updating existing Publisher
-    def put(self, request, PublisherName, format=None):
-        publisher = Publisher.objects.filter(PublisherName=PublisherName).first()
+    def put(self, request, pk, format=None):
+        publisher = Publisher.objects.filter(pk=pk).first()
         serializer = PublisherSerializer(publisher, data=request.data)
         print(publisher)
         if serializer.is_valid ( ):
@@ -284,8 +284,8 @@ class PublisherDetails (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Delete a Publisher
-    def delete(self, request, PublisherName, format=None):
-        publisher = Publisher.objects.filter (PublisherName=PublisherName)
+    def delete(self, request, pk, format=None):
+        publisher = Publisher.objects.filter (pk=pk)
         publisher.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -349,16 +349,16 @@ class DonorList (APIView):
 
 class DonorDetails (APIView):
     #Searching for Donor
-    def get(self, request, Name, format=None):
-        donor = Donor.objects.get (Name=Name)
-        serializer = DonorSerializer(litAward)
+    def get(self, request, pk, format=None):
+        donor = Donor.objects.get (pk=pk)
+        serializer = DonorSerializer(donor)
         return Response (serializer.data)
 
     #Updating existing Donor
-    def put(self, request, Name, format=None):
-        donor = Donor.objects.filter(Name = Name).first()
+    def put(self, request, pk, format=None):
+        donor = Donor.objects.filter(pk = pk).first()
         serializer = DonorSerializer(donor, data=request.data)
-        print(litAward)
+        print(donor)
         if serializer.is_valid ( ):
             print(request.data)
             serializer.save()
@@ -366,8 +366,8 @@ class DonorDetails (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting a Donor
-     def delete(self, request, Name, format=None):
-        donor = Donor.objects.filter (Name = Name)
+    def delete(self, request, pk, format=None):
+        donor = Donor.objects.filter (pk = pk)
         donor.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -420,7 +420,7 @@ class WorkBasedList (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AuthorBased (APIView):
+class AuthorBasedList (APIView):
     #Viewing All Author Based Awards
     def get(self, request, format=None):
         AB = AuthorBased.objects.all()
@@ -454,14 +454,14 @@ class VendorList (APIView):
 
 class VendorDetails (APIView):
     #Searching for Vendor
-    def get(self, request, Name, format=None):
-        vendor = Vendor.objects.get (Name=Name)
+    def get(self, request, pk, format=None):
+        vendor = Vendor.objects.get (pk=pk)
         serializer = VendorSerializer(vendor)
         return Response (serializer.data)
 
     #Updating existing Vendor
-    def put(self, request, Name, format=None):
-        vendor = Vendor.objects.filter(Name = Name).first()
+    def put(self, request, pk, format=None):
+        vendor = Vendor.objects.filter(pk = pk).first()
         serializer = VendorSerializer(vendor, data=request.data)
         print(vendor)
         if serializer.is_valid ( ):
@@ -471,8 +471,8 @@ class VendorDetails (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting a Vendor
-     def delete(self, request, Name, format=None):
-        vendor = Vendor.objects.filter (Name = Name)
+    def delete(self, request, pk, format=None):
+        vendor = Vendor.objects.filter (pk = pk)
         vendor.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -512,7 +512,7 @@ class SellDetails (APIView):
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #Deleting a Sale
-     def delete(self, request, W_Name, V_Name, format=None):
+    def delete(self, request, W_Name, V_Name, format=None):
         sell = Sell.objects.filter (W_Name = W_Name, V_Name = V_Name)
         sell.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
